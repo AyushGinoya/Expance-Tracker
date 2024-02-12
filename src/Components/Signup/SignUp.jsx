@@ -10,7 +10,7 @@ const SignUp = () => {
 
   return (
     <div>
-      <div align="center" className="Welcometext">
+      <div align="center" className="Welcometext" style={{ fontSize: "24px" }}>
         Start saving smarter with Expense Tracker,{" "}
         <strong style={{ color: "blue" }}>{name}</strong> take control of your
         finances today!
@@ -22,7 +22,9 @@ const SignUp = () => {
             <tbody>
               <tr>
                 <td>
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="username" style={{ fontSize: "24px" }}>
+                    Username
+                  </label>
                 </td>
                 <td>
                   <input
@@ -36,7 +38,9 @@ const SignUp = () => {
               </tr>
               <tr>
                 <td>
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email" style={{ fontSize: "24px" }}>
+                    Email
+                  </label>
                 </td>
                 <td>
                   <input type="email" id="email" name="email" />
@@ -44,17 +48,33 @@ const SignUp = () => {
               </tr>
               <tr>
                 <td>
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password" style={{ fontSize: "24px" }}>
+                    Password
+                  </label>
                 </td>
                 <td>
                   <input type="password" id="password" name="password" />
                 </td>
               </tr>
               <tr>
-                <td colSpan="2" style={{ textAlign: "center" }}>
-                  <input type="submit" value="Sign Up" />
+                <td>
+                  <label htmlFor="cpassword" style={{ fontSize: "24px" }}>
+                    Password
+                  </label>
+                </td>
+                <td>
+                  <input type="password" id="cpassword" name="cpassword" />
                 </td>
               </tr>
+              <tr>
+                <td
+                  colSpan="2"
+                  style={{ textAlign: "center", fontSize: "24px" }}
+                >
+                  <input type="submit" value="Sign Up" className="signUpbutton" />
+                </td>
+              </tr>
+              <tr></tr>
             </tbody>
           </table>
         </form>

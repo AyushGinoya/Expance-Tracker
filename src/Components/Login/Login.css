@@ -1,0 +1,40 @@
+
+.Login {
+    margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.Login table {
+    border-collapse: collapse;
+    width: 150%;
+    margin: auto;
+}
+
+.Login td {
+    padding: 8px;
+    text-align: left;
+}
+
+.Login input[type="email"],
+.Login input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.Login input[type="email"]:focus,
+.Login input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.loginButton {
+    width: 30% ;
+    padding: 8px;
+    border-radius: 4px;
+  }
