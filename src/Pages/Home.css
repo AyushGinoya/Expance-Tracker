@@ -1,0 +1,90 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-right: 40px;
+   }
+   
+   .profile-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+   }
+   
+   .logout-option {
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   }
+   
+.home-page {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    background-color: #f5f5f5;
+   }
+
+   .content {
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+   }
+   
+   /* Each takes up half of the content width */
+   .balance-income-expense-container,
+   .expense-form-container {
+    width: 45%; 
+   }
+   
+   .balance-container,
+   .income-container,
+   .expense-container {
+    width: 100%;
+    margin-bottom: 20px;
+   }
+   
+   .input-group {
+    margin-bottom: 20px;
+   }
+   
+   .input-group label {
+    display: block;
+    margin-bottom: 5px;
+   }
+   
+   .input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+   }
+   
+   .expense-btn {
+    width: 100%;
+   }
+   
+   .income-value {
+    color: green;
+   }
+   
+   .expense-value {
+    color: red;
+   }
+   
