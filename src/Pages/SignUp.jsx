@@ -1,39 +1,79 @@
 import React, { useState } from "react";
 import "./LS.css";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-
+import UserService from "../Service/UserService";
+import axios from "axios";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
+    userName: "",
+    emailId: "",
     password: "",
-    confirmPassword: "",
+    confPass: "",
   });
+  //
+  // const handleChange = (e) => {
+  //   // const value = e.target.value;
+  //   // setFormData({...formData,[e.target.value]:value});
+  //
+  //   const { id, value } = e.target;
+  //   const key = id.replace(/-/g, '');
+  //   setFormData((prevFormData) => ({
+  //     ...prevFormData,
+  //     [key]: value,
+  //   }));
+  // };
+
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    const key = id.replace(/-/g, '');
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [key]: value,
+      [id]: value, // Directly use id here without replacing dashes
     }));
   };
 
+
   const saveData = async (e) => {
     e.preventDefault();
+    // console.log(JSON.stringify("formdata value"+formData));
+    console.log("formdata value", formData); // This will properly display the formData object in the console.
+
     try {
-      const response = await axios.post('http://localhost:8080/signup', formData);
+      console.log('abc')
+      if (formData.password !== formData.confPass) {
+        alert("Passwords do not match");
+        return;
+      }
+      console.log('abcd')
+
+      //const response = await UserService.saveUser(formData);
+      const response =  await axios.post("http://localhost:8080/signup",formData)
+      console.log("responce data"+response.data);
       alert(response.data);
       navigate('/home');
     } catch (error) {
-      console.error(error);
+      console.log("in catch block")
+      console.error("Error occurred:", error.toJSON());
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Data:", error.response.data);
+        console.error("Status:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        alert("Error: " + (error.response.data.message || "Something went wrong"));
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("Request:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error Message:", error.message);
+      }
+      console.error("Config:", error.config);
     }
   };
-
 
   return (
     <div className="login-page">
@@ -48,10 +88,10 @@ const SignUpPage = () => {
             <label htmlFor="username">Username</label>
             <input
               type="text"
-              id="username"
+              id="userName"
               placeholder="Username"
               required
-              value={formData.username}
+              value={formData.userName}
               onChange={handleChange}
             />
           </div>
@@ -59,10 +99,10 @@ const SignUpPage = () => {
             <label htmlFor="email">Email</label>
             <input
               type="email"
-              id="email"
+              id="emailId"
               placeholder="Email"
               required
-              value={formData.email}
+              value={formData.emailId}
               onChange={handleChange}
             />
           </div>
@@ -81,10 +121,10 @@ const SignUpPage = () => {
             <label htmlFor="confirm-password">Confirm Password</label>
             <input
               type="password"
-              id="confirmPassword"
+              id="confPass"
               placeholder="Confirm Password"
               required
-              value={formData.confirmPassword}
+              value={formData.confPass}
               onChange={handleChange}
             />
           </div>
