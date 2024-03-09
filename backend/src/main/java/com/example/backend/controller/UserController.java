@@ -19,7 +19,6 @@ public class UserController {
         this.userServices = userServices;
     }
 
-
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody UserDTO userDTO) {
         // Check if passwords match
@@ -27,7 +26,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Passwords do not match");
         }
 
-        // Delegate sign-up logic to the authentication service
         userServices.createUser(userDTO);
         return ResponseEntity.ok("User registered successfully");
     }

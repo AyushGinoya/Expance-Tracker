@@ -38,8 +38,6 @@ const SignUpPage = () => {
 
   const saveData = async (e) => {
     e.preventDefault();
-    // console.log(JSON.stringify("formdata value"+formData));
-    console.log("formdata value", formData); // This will properly display the formData object in the console.
 
     try {
       console.log('abc')
@@ -49,10 +47,11 @@ const SignUpPage = () => {
       }
       console.log('abcd')
 
-      //const response = await UserService.saveUser(formData);
-      const response =  await axios.post("http://localhost:8080/signup",formData)
+      const response = await UserService.saveUser(formData);
       console.log("responce data"+response.data);
       alert(response.data);
+      localStorage.setItem('userName', formData.userName);
+      localStorage.setItem('emailId', formData.emailId);
       navigate('/home');
     } catch (error) {
       console.log("in catch block")
