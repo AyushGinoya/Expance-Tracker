@@ -30,7 +30,7 @@ public class UserEntity {
 
     private String password;
 
-    @OneToMany(targetEntity = ExpanceEntity.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = ExpanceEntity.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     @JoinColumn(name = "ue_fk")
     private List<ExpanceEntity> expanceList;
 
