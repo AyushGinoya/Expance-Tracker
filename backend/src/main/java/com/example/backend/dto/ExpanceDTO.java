@@ -15,6 +15,5 @@ public class ExpanceDTO {
     private String type;
     private String category;
     private int amount;
-    private String username;
     private Long userId;
 }

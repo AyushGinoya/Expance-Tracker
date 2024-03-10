@@ -9,4 +9,6 @@ public interface ExpanceService {
     ExpanceEntity addExpance(ExpanceDTO expanceDTO);
 
     List<ExpanceDTO> getAllExpances(Long id);
+
+    ExpanceDTO editExpense(Long expenseId, ExpanceDTO expanceDTO);
 }
