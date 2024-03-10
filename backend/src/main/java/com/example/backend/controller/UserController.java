@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.LoginDTO;
 import com.example.backend.dto.UserDTO;
 import com.example.backend.services.UserServices;
 import jakarta.validation.Valid;
@@ -30,5 +31,16 @@ public class UserController {
 
         Long isAuthenticated = userServices.authenticateSignUp(userDTO.getEmailId());
         return new ResponseEntity(isAuthenticated, HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+        Long isAuthenticated = userServices.authenticateLogin(loginDTO.getEmail(), loginDTO.getPassword());
+
+        if (isAuthenticated != -1) {
+            return new ResponseEntity(isAuthenticated, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect email or password.");
+        }
     }
 }

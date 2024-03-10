@@ -45,6 +45,11 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.element {
+    height: auto;
 }
 
 .balance-income-expense-container,
@@ -128,3 +133,8 @@ th, td {
 .btn:hover {
     background-color: #f0f0f0;
 }
+
+.home-page, .header, .content {
+    overflow: auto;
+}
+

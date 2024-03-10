@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ExpenceServices from '../Service/ExpenceService';
 import "../Pages/Home.css";
 
-const ExpenseList = () => {
+const ExpenseList = ({trigger}) => {
     const [expenses, setExpenses] = useState([]);
     const [editingExpense, setEditingExpense] = useState(null);
     const [editedExpenseDetails, setEditedExpenseDetails] = useState({});
@@ -24,7 +24,7 @@ const ExpenseList = () => {
         };
 
         fetchExpenses();
-    }, []);
+    }, [trigger]);
 
     const handleEditClick = (expense) => {
         setEditingExpense(expense);
@@ -46,6 +46,17 @@ const ExpenseList = () => {
             setEditedExpenseDetails({});
         } catch (error) {
             console.error("Failed to update expense:", error);
+        }
+    };
+
+    const handleDeleteClick = async (expenseId) => {
+        try {
+            await ExpenceServices.deleteExpense(expenseId);
+            console.log("Delete : ", expenseId)
+            const updatedExpenses = expenses.filter(expense => expense.id !== expenseId);
+            setExpenses(updatedExpenses);
+        } catch (error) {
+            console.error("Failed to delete expense:", error);
         }
     };
 
@@ -97,7 +108,8 @@ const ExpenseList = () => {
                                 <td>${expense.amount}</td>
                                 <td>
                                     <button className="btn" onClick={() => handleEditClick(expense)}>Edit</button>
-                                    <button className="btn">Delete</button>
+                                    <button className="btn" onClick={() => handleDeleteClick(expense.id)}>Delete
+                                    </button>
                                 </td>
                             </>
                         )}

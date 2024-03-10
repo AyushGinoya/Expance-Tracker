@@ -41,7 +41,9 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public Long authenticateLogin(String email, String password) {
-        return null;
+
+        UserEntity user = userRepository.findByEmailId(email);
+        return user != null && user.getPassword().equals(password) ? user.getId() : -1;
     }
 
     @Override
@@ -50,5 +52,5 @@ public class UserServicesImpl implements UserServices {
 
         return user.getId();
     }
-    
+
 }

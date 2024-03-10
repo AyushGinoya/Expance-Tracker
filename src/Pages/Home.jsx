@@ -18,8 +18,7 @@ const HomePage = () => {
     const [showLogout, setShowLogout] = useState(false);
     const [trigger, setTrigger] = useState(0);
 
-    const userName = localStorage.getItem('userName');
-    const emailId = localStorage.getItem('emailId');
+    const userId = localStorage.getItem("userId")
 
     const handleExpenseChange = (e) => {
         const {id, value} = e.target;
@@ -32,7 +31,8 @@ const HomePage = () => {
     const handleExpenseSubmit = async (e) => {
         e.preventDefault();
         try {
-            await ExpenceService.saveExpence(expenseData);
+            console.log("exp data:", expenseData)
+            await ExpenceService.saveExpence(expenseData, userId);
             setTrigger(prevTrigger => prevTrigger + 1);
             if (expenseData.type === "Expense") {
                 setTotalExpense(prevTotal => prevTotal + parseFloat(expenseData.amount));
@@ -49,13 +49,14 @@ const HomePage = () => {
         }
     };
 
+
     const handleAvatarClick = () => {
         setShowLogout(!showLogout);
     };
 
     return (
         <div className="home-page">
-            <header className="header">
+            <header className="header" style={{paddingTop: '20px'}}>
                 <h1>Home</h1>
                 <img
                     src="https://www.w3schools.com/images/lamp.jpg"

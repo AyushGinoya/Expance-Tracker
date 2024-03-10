@@ -20,10 +20,11 @@ public class ExpanceController {
         this.expanceService = expanceService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addExpance(@Valid @RequestBody ExpanceDTO expanceDTO) {
+    @PostMapping("/add/{id}")
+    public ResponseEntity<?> addExpance(@Valid @RequestBody ExpanceDTO expanceDTO, @PathVariable Long id) {
         try {
-            ExpanceEntity createdExpance = expanceService.addExpance(expanceDTO);
+            System.out.println("uid" + id);
+            ExpanceEntity createdExpance = expanceService.addExpance(expanceDTO, id);
             return new ResponseEntity<>(createdExpance, HttpStatus.CREATED);
         } catch (Exception e) {
             // This is a simple example. In a real scenario, you should handle different types of exceptions
@@ -42,4 +43,13 @@ public class ExpanceController {
         return ResponseEntity.ok(updatedExpense);
     }
 
+    @DeleteMapping("/delete/{expenseId}")
+    public ResponseEntity<?> deleteExpense(@PathVariable Long expenseId) {
+        boolean isDeleted = expanceService.deleteExpense(expenseId);
+        if (isDeleted) {
+            return ResponseEntity.ok("Expance details with ID " + expenseId + " deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+import jakarta.persistence.Transient;
 import lombok.*;
 
 import java.util.Date;
@@ -15,5 +16,6 @@ public class ExpanceDTO {
     private String type;
     private String category;
     private int amount;
+    @Transient
     private Long userId;
 }

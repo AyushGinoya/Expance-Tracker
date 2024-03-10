@@ -25,12 +25,18 @@ public class ExpanceServiceImpl implements ExpanceService {
     }
 
     @Override
-    public ExpanceEntity addExpance(ExpanceDTO expanceDTO) {
+    public ExpanceEntity addExpance(ExpanceDTO expanceDTO, Long id) {
+        System.out.println("inside add expance....");
         ExpanceEntity expanceEntity = new ExpanceEntity();
+        expanceDTO.setUserId(id);
         BeanUtils.copyProperties(expanceDTO, expanceEntity);
-        userRepository.findById(expanceDTO.getUserId()).ifPresent(expanceEntity::setUserEntity);
+        userRepository.findById(id).ifPresent(userEntity -> {
+            expanceEntity.setUserEntity(userEntity);
+            System.out.println("UserEntity found and set: " + userEntity.getId());
+        });
         return expanceRepository.save(expanceEntity);
     }
+
 
     @Override
     public List<ExpanceDTO> getAllExpances(Long userId) {
@@ -71,4 +77,16 @@ public class ExpanceServiceImpl implements ExpanceService {
             return updatedExpanceDTO;
         }).orElseThrow(() -> new ResourceNotFoundException("Expense not found with id " + expenseId));
     }
+
+    @Override
+    public boolean deleteExpense(Long expenseId) {
+        if (expanceRepository.existsById(expenseId)) {
+            expanceRepository.deleteById(expenseId);
+            return true;
+        }
+        return false;
+
+
+    }
+
 }

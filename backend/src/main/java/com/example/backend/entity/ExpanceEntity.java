@@ -32,8 +32,8 @@ public class ExpanceEntity {
 
     private int amount;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ue_fk")
+    @ManyToOne
+    @JoinColumn(name = "ue_fk", referencedColumnName = "id")
     private UserEntity userEntity;
 
 }
