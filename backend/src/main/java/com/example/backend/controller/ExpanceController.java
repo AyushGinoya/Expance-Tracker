@@ -36,4 +36,10 @@ public class ExpanceController {
         return expanceService.getAllExpances(id);
     }
 
+    @PutMapping("/edit/{expenseId}")
+    public ResponseEntity<ExpanceDTO> editExpense(@PathVariable Long expenseId, @RequestBody ExpanceDTO expanceDTO) {
+        ExpanceDTO updatedExpense = expanceService.editExpense(expenseId, expanceDTO);
+        return ResponseEntity.ok(updatedExpense);
+    }
+
 }

@@ -1,42 +1,64 @@
-import React, {useEffect, useState} from "react";
-import ExpenceService from "../Service/ExpenceService";
+import React, {useEffect, useState} from 'react';
+import ExpenceServices from '../Service/ExpenceService';
+import "../Pages/Home.css";
 
-const ExpenseList = ({trigger}) => {
-    // Correctly placed at the top level
-    const [expenseList, setExpenseList] = useState([]);
+const ExpenseList = () => {
+    const [expenses, setExpenses] = useState([]);
+    const [editingExpense, setEditingExpense] = useState(null);
+    const [editedExpenseDetails, setEditedExpenseDetails] = useState({});
 
-    // Fetch the user ID from local storage
-    const userId = localStorage.getItem('userId');
-
-    // Correctly placed at the top level
     useEffect(() => {
-        if (!userId) {
-            alert("User ID not found. Please log in again.");
-            // Return early if user ID is not found, but this is not a recommended practice
-            // Instead, consider handling this case differently, such as redirecting the user or showing a message
-            return;
-        }
-
         const fetchExpenses = async () => {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                console.error("User ID not found in localStorage.");
+                return;
+            }
+
             try {
-                const response = await ExpenceService.getExpences(userId);
-                setExpenseList(response.data);
+                const response = await ExpenceServices.getExpences(userId);
+                setExpenses(response.data);
             } catch (error) {
                 console.error("Failed to fetch expenses:", error);
             }
         };
 
         fetchExpenses();
-    }, [userId, trigger]); // Correctly placed at the top level
+    }, []);
 
-    // Return statement is here, after all hooks have been called
-    if (!userId) {
-        return null; // Return null to render nothing if user ID is not found
-    }
+    const handleEditClick = (expense) => {
+        setEditingExpense(expense);
+        setEditedExpenseDetails({...expense});
+    };
+
+    const handleEditChange = (event) => {
+        const {name, value} = event.target;
+        setEditedExpenseDetails(prev => ({...prev, [name]: value}));
+    };
+
+    const handleEditSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await ExpenceServices.editExpense(editingExpense.id, editedExpenseDetails);
+            const updatedExpenses = expenses.map(expense => expense.id === editingExpense.id ? response.data : expense);
+            setExpenses(updatedExpenses);
+            setEditingExpense(null);
+            setEditedExpenseDetails({});
+        } catch (error) {
+            console.error("Failed to update expense:", error);
+        }
+    };
+
+    const editFieldStyle = {
+        width: "100%",
+        padding: "8px",
+        margin: "4px 0",
+    };
 
     return (
-        <div className="flex shadow border-b">
-            <table className="w-full">
+        <div>
+            <h2>Expenses</h2>
+            <table>
                 <thead>
                 <tr>
                     <th>Date</th>
@@ -47,16 +69,38 @@ const ExpenseList = ({trigger}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {expenseList.map((item) => (
-                    <tr key={item.id}>
-                        <td>{item.date}</td>
-                        <td>{item.type}</td>
-                        <td>{item.category}</td>
-                        <td>${item.amount}</td>
-                        <td>
-                            <button className="btn">Edit</button>
-                            <button className="btn">Delete</button>
-                        </td>
+                {expenses.map((expense) => (
+                    <tr key={expense.id}>
+                        {editingExpense && editingExpense.id === expense.id ? (
+                            <td colSpan="5">
+                                <form onSubmit={handleEditSubmit}>
+                                    <input type="date" name="date" value={editedExpenseDetails.date}
+                                           onChange={handleEditChange} style={editFieldStyle}/>
+                                    <select name="type" value={editedExpenseDetails.type} onChange={handleEditChange}
+                                            style={editFieldStyle}>
+                                        <option value="Expense">Expense</option>
+                                        <option value="Income">Income</option>
+                                    </select>
+                                    <input type="text" name="category" value={editedExpenseDetails.category}
+                                           onChange={handleEditChange} style={editFieldStyle}/>
+                                    <input type="number" name="amount" value={editedExpenseDetails.amount}
+                                           onChange={handleEditChange} style={editFieldStyle}/>
+                                    <button type="submit" className="btn">Save</button>
+                                    <button className="btn" onClick={() => setEditingExpense(null)}>Cancel</button>
+                                </form>
+                            </td>
+                        ) : (
+                            <>
+                                <td>{expense.date}</td>
+                                <td>{expense.type}</td>
+                                <td>{expense.category}</td>
+                                <td>${expense.amount}</td>
+                                <td>
+                                    <button className="btn" onClick={() => handleEditClick(expense)}>Edit</button>
+                                    <button className="btn">Delete</button>
+                                </td>
+                            </>
+                        )}
                     </tr>
                 ))}
                 </tbody>
