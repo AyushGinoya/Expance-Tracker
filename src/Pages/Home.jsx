@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import "./Home.css";
 import ExpenseList from "../Helpers/ExpanceList";
+import ExpenceService from "../Service/ExpenceService";
 
 const HomePage = () => {
     const [expenseData, setExpenseData] = useState({
@@ -8,12 +9,14 @@ const HomePage = () => {
         type: "Expense",
         category: "",
         amount: "",
+        userId: localStorage.getItem('userId')
     });
 
     const [totalIncome, setTotalIncome] = useState(0);
     const [totalExpense, setTotalExpense] = useState(0);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showLogout, setShowLogout] = useState(false);
+    const [trigger, setTrigger] = useState(0);
 
     const userName = localStorage.getItem('userName');
     const emailId = localStorage.getItem('emailId');
@@ -26,20 +29,24 @@ const HomePage = () => {
         }));
     };
 
-    const handleExpenseSubmit = (e) => {
+    const handleExpenseSubmit = async (e) => {
         e.preventDefault();
-        if (expenseData.type === "Expense") {
-            setTotalExpense((prevTotal) => prevTotal + parseFloat(expenseData.amount));
-        } else {
-            setTotalIncome((prevTotal) => prevTotal + parseFloat(expenseData.amount));
+        try {
+            await ExpenceService.saveExpence(expenseData);
+            setTrigger(prevTrigger => prevTrigger + 1);
+            if (expenseData.type === "Expense") {
+                setTotalExpense(prevTotal => prevTotal + parseFloat(expenseData.amount));
+            } else {
+                setTotalIncome(prevTotal => prevTotal + parseFloat(expenseData.amount));
+            }
+            setExpenseData({
+                ...expenseData,
+                category: "",
+                amount: "",
+            });
+        } catch (error) {
+            console.error("Failed to add expense:", error);
         }
-        console.log(expenseData);
-        setExpenseData({
-            type: "Expense",
-            date: new Date().toLocaleDateString(),
-            category: "",
-            amount: "",
-        });
     };
 
     const handleAvatarClick = () => {
@@ -121,7 +128,7 @@ const HomePage = () => {
                     </form>
                 </div>
             </div>
-            <ExpenseList/>
+            <ExpenseList trigger={trigger}/>
         </div>
     );
 };
