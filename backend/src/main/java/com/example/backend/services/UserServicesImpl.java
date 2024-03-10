@@ -39,4 +39,16 @@ public class UserServicesImpl implements UserServices {
         }
     }
 
+    @Override
+    public Long authenticateLogin(String email, String password) {
+        return null;
+    }
+
+    @Override
+    public Long authenticateSignUp(String email) {
+        UserEntity user = userRepository.findByEmailId(email);
+
+        return user.getId();
+    }
+    
 }

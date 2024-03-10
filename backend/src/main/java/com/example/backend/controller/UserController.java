@@ -27,6 +27,8 @@ public class UserController {
         }
 
         userServices.createUser(userDTO);
-        return ResponseEntity.ok("User registered successfully");
+
+        Long isAuthenticated = userServices.authenticateSignUp(userDTO.getEmailId());
+        return new ResponseEntity(isAuthenticated, HttpStatus.OK);
     }
 }
