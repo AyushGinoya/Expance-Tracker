@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import ExpenceServices from '../Service/ExpenceService';
 import "../Pages/Home.css";
 
-const ExpenseList = ({trigger}) => {
+const ExpenseList = ({trigger, fetchAndProcessExpenses}) => {
     const [expenses, setExpenses] = useState([]);
     const [editingExpense, setEditingExpense] = useState(null);
     const [editedExpenseDetails, setEditedExpenseDetails] = useState({});
@@ -44,6 +44,8 @@ const ExpenseList = ({trigger}) => {
             setExpenses(updatedExpenses);
             setEditingExpense(null);
             setEditedExpenseDetails({});
+            fetchAndProcessExpenses();
+
         } catch (error) {
             console.error("Failed to update expense:", error);
         }
@@ -55,6 +57,7 @@ const ExpenseList = ({trigger}) => {
             console.log("Delete : ", expenseId)
             const updatedExpenses = expenses.filter(expense => expense.id !== expenseId);
             setExpenses(updatedExpenses);
+            fetchAndProcessExpenses();
         } catch (error) {
             console.error("Failed to delete expense:", error);
         }
@@ -68,7 +71,8 @@ const ExpenseList = ({trigger}) => {
 
     return (
         <div>
-            <h2>Expenses</h2>
+            <h2 style={{marginBottom: '15px'}}>Expenses</h2>
+
             <table>
                 <thead>
                 <tr>

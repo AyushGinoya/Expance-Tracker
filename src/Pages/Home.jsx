@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Home.css";
 import ExpenseList from "../Helpers/ExpanceList";
 import ExpenceService from "../Service/ExpenceService";
@@ -14,11 +14,36 @@ const HomePage = () => {
 
     const [totalIncome, setTotalIncome] = useState(0);
     const [totalExpense, setTotalExpense] = useState(0);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [showLogout, setShowLogout] = useState(false);
     const [trigger, setTrigger] = useState(0);
 
     const userId = localStorage.getItem("userId")
+
+    const fetchAndProcessExpenses = async () => {
+        try {
+            const response = await ExpenceService.getExpences(userId);
+            const expenseData = response.data;
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            expenseData.forEach(item => {
+                if (item.type === "Income") {
+                    totalIncome += item.amount;
+                } else if (item.type === "Expense") {
+                    totalExpense += item.amount;
+                }
+            });
+
+            setTotalIncome(totalIncome);
+            setTotalExpense(totalExpense);
+        } catch (error) {
+            console.error("Failed to fetch data:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAndProcessExpenses();
+    }, [userId, trigger]);
+
 
     const handleExpenseChange = (e) => {
         const {id, value} = e.target;
@@ -34,11 +59,6 @@ const HomePage = () => {
             console.log("exp data:", expenseData)
             await ExpenceService.saveExpence(expenseData, userId);
             setTrigger(prevTrigger => prevTrigger + 1);
-            if (expenseData.type === "Expense") {
-                setTotalExpense(prevTotal => prevTotal + parseFloat(expenseData.amount));
-            } else {
-                setTotalIncome(prevTotal => prevTotal + parseFloat(expenseData.amount));
-            }
             setExpenseData({
                 ...expenseData,
                 category: "",
@@ -49,28 +69,10 @@ const HomePage = () => {
         }
     };
 
-
-    const handleAvatarClick = () => {
-        setShowLogout(!showLogout);
-    };
-
     return (
         <div className="home-page">
             <header className="header" style={{paddingTop: '20px'}}>
                 <h1>Home</h1>
-                <img
-                    src="https://www.w3schools.com/images/lamp.jpg"
-                    alt="Profile"
-                    className="profile-logo"
-                    onClick={handleAvatarClick}
-                />
-                {showLogout && (
-                    <div className="logout-option">
-                        <button onClick={() => console.log("Logout clicked")}>
-                            Logout
-                        </button>
-                    </div>
-                )}
             </header>
 
             <div className="content">
@@ -93,7 +95,8 @@ const HomePage = () => {
                     <form onSubmit={handleExpenseSubmit}>
                         <div className="input-group">
                             <label htmlFor="date">Date</label>
-                            <input type="date" id="date" value={expenseData.date} onChange={handleExpenseChange}/>
+                            <input type="date" id="date" value={expenseData.date} onChange={handleExpenseChange}
+                                   required/>
                         </div>
                         <div className="input-group">
                             <label htmlFor="type">Type</label>
@@ -129,8 +132,9 @@ const HomePage = () => {
                     </form>
                 </div>
             </div>
-            <ExpenseList trigger={trigger}/>
+            <ExpenseList trigger={trigger} fetchAndProcessExpenses={fetchAndProcessExpenses}/>
         </div>
+
     );
 };
 export default HomePage;

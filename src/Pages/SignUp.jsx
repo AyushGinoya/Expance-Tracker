@@ -13,12 +13,58 @@ const SignUpPage = () => {
         confPass: "",
     });
 
+    const [errors, setErrors] = useState({
+        passwordError: "",
+        emailError: "",
+    });
+
     const handleChange = (e) => {
         const {id, value} = e.target;
         setFormData((prevFormData) => ({
             ...prevFormData,
             [id]: value,
         }));
+
+        if (id === "emailId") {
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    emailError: "Please enter a valid email address",
+                }));
+            } else {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    emailError: "",
+                }));
+            }
+        } else if (id === "password") {
+            if (value.length < 6) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    passwordError: "Password must be at least 6 characters long",
+                }));
+            } else {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    passwordError: "",
+                }));
+            }
+        } else if (id === "confPass") {
+            if (value !== formData.password) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    confPassError: "Passwords do not match",
+                }));
+            } else {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    confPassError: "",
+                }));
+            }
+        }
+
     };
 
     const saveData = async (e) => {
@@ -71,6 +117,7 @@ const SignUpPage = () => {
                             value={formData.userName}
                             onChange={handleChange}
                         />
+                        {errors.userNameError && <p className="error">{errors.userNameError}</p>}
                     </div>
                     <div className="input-group">
                         <label htmlFor="email">Email</label>
@@ -82,6 +129,7 @@ const SignUpPage = () => {
                             value={formData.emailId}
                             onChange={handleChange}
                         />
+                        {errors.emailError && <p className="error">{errors.emailError}</p>}
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password</label>
@@ -93,6 +141,7 @@ const SignUpPage = () => {
                             value={formData.password}
                             onChange={handleChange}
                         />
+                        {errors.passwordError && <p className="error">{errors.passwordError}</p>}
                     </div>
                     <div className="input-group">
                         <label htmlFor="confirm-password">Confirm Password</label>
@@ -104,6 +153,7 @@ const SignUpPage = () => {
                             value={formData.confPass}
                             onChange={handleChange}
                         />
+                        {errors.confPassError && <p className="error">{errors.confPassError}</p>}
                     </div>
                     <button type="submit" className="btn login-btn">
                         SignUp

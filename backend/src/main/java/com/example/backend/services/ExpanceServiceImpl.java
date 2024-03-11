@@ -2,7 +2,7 @@ package com.example.backend.services;
 
 import com.example.backend.dto.ExpanceDTO;
 import com.example.backend.entity.ExpanceEntity;
-import com.example.backend.exception.ResourceNotFoundException;
+import com.example.backend.exception.ExpenseNotFoundException;
 import com.example.backend.repository.ExpanceRepository;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +26,7 @@ public class ExpanceServiceImpl implements ExpanceService {
 
     @Override
     public ExpanceEntity addExpance(ExpanceDTO expanceDTO, Long id) {
-        System.out.println("inside add expance....");
+        System.out.println("inside add expense....");
         ExpanceEntity expanceEntity = new ExpanceEntity();
         expanceDTO.setUserId(id);
         BeanUtils.copyProperties(expanceDTO, expanceEntity);
@@ -75,7 +75,7 @@ public class ExpanceServiceImpl implements ExpanceService {
             updatedExpanceDTO.setUserId(updatedExpense.getUserEntity().getId());
 
             return updatedExpanceDTO;
-        }).orElseThrow(() -> new ResourceNotFoundException("Expense not found with id " + expenseId));
+        }).orElseThrow(() -> new ExpenseNotFoundException("Expense not found with id " + expenseId));
     }
 
     @Override
@@ -85,8 +85,5 @@ public class ExpanceServiceImpl implements ExpanceService {
             return true;
         }
         return false;
-
-
     }
-
 }
